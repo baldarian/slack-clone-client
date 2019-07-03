@@ -1,0 +1,18 @@
+* {
+  outline: none;
+}
+
+#root .emoji-mart-emoji {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+#root .emoji-mart .emoji-mart-emoji > span {
+  cursor: pointer;
+}
+
+[contenteditable='true']:empty:before {
+  content: attr(placeholder);
+  display: block;
+  color: #aaa;
+}

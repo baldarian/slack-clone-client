@@ -69,7 +69,7 @@ const ViewTeam = ({ match, history }) => {
         users={[{ id: 1, name: 'Slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={() => setIsAddChannelModalOpen(true)}
         onInvitePeopleClick={() => setIsInvitePeopleModalOpen(true)}
-        isInvitePeopleButtonAvailable={currentTeam.owner === me.id}
+        isInvitePeopleButtonAvailable={currentTeam.isAdmin}
       />
       <Header channelName={currentChannel.name} />
       {currentChannel.id && <Messages channelId={currentChannel.id} />}

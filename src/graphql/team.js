@@ -5,7 +5,7 @@ export const GET_TEAMS = gql`
     teams {
       id
       name
-      owner
+      isAdmin
       channels {
         id
         name

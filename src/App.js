@@ -38,7 +38,10 @@ class App extends Component {
             <PublicRoute path="/register" component={Register} />
             <PublicRoute path="/login" component={Login} />
             <PrivateRoute path="/create-team" component={CreateTeam} />
-            <PrivateRoute path="/:teamId?/:channelId?" component={ViewTeam} />
+            <PrivateRoute
+              path="/:type?/:teamId?/:channelId?"
+              component={ViewTeam}
+            />
           </Switch>
         </Router>
         <ToastContainer hideProgressBar autoClose={2000} />

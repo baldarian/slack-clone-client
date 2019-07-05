@@ -30,7 +30,7 @@ const ViewTeam = ({ match, history }) => {
   const [isAddChannelModalOpen, setIsAddChannelModalOpen] = useState(false);
   const [isInvitePeopleModalOpen, setIsInvitePeopleModalOpen] = useState(false);
 
-  const { teamId, channelId } = match.params;
+  const { teamId, channelId, type } = match.params;
 
   const currentTeam = teams.find(team => team.id === teamId) || defaultTeam;
 
@@ -44,16 +44,30 @@ const ViewTeam = ({ match, history }) => {
       return;
     }
 
+    if (!['channel', 'direct'].includes(type)) {
+      history.push('/channel');
+      return;
+    }
+
     if (!teamId || (!loading && currentTeam === defaultTeam)) {
-      history.push(`/${teams[0].id}`);
+      history.push(`/${type}/${teams[0].id}`);
       return;
     }
 
     if (!channelId || (!loading && currentChannel === defaultChannel)) {
-      history.push(`/${teamId}/${currentTeam.channels[0].id}`);
+      history.push(`/${type}/${teamId}/${currentTeam.channels[0].id}`);
       return;
     }
-  }, [channelId, currentChannel, currentTeam, history, loading, teamId, teams]);
+  }, [
+    channelId,
+    currentChannel,
+    currentTeam,
+    history,
+    loading,
+    teamId,
+    teams,
+    type
+  ]);
 
   const formattedTeams = teams.map(team => ({
     letter: team.name.charAt(0).toUpperCase(),

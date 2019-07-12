@@ -84,7 +84,10 @@ const SendMessage = ({ channel }) => {
             }
 
             await createMessage({
-              variables: { text: message, channelId: channel.id }
+              variables: {
+                text: message,
+                conversationId: channel.conversation.id
+              }
             });
 
             input.current.textContent = '';

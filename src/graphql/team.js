@@ -9,6 +9,9 @@ export const GET_TEAMS = gql`
       channels {
         id
         name
+        conversation {
+          id
+        }
       }
     }
   }

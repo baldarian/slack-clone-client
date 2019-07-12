@@ -14,7 +14,7 @@ import { PrivateRoute, PublicRoute } from './components/Route';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import CreateTeam from './pages/CreateTeam';
-import ViewTeam from './pages/ViewTeam';
+import Chat from './pages/Chat';
 
 class App extends Component {
   state = {
@@ -38,10 +38,7 @@ class App extends Component {
             <PublicRoute path="/register" component={Register} />
             <PublicRoute path="/login" component={Login} />
             <PrivateRoute path="/create-team" component={CreateTeam} />
-            <PrivateRoute
-              path="/:type?/:teamId?/:channelId?"
-              component={ViewTeam}
-            />
+            <PrivateRoute path="/:conversationId?" component={Chat} />
           </Switch>
         </Router>
         <ToastContainer hideProgressBar autoClose={2000} />

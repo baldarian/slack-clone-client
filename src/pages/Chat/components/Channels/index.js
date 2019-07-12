@@ -71,8 +71,8 @@ const Channels = ({
         <SideBarListHeader>
           Channels <Icon name="add circle" onClick={onAddChannelClick} />
         </SideBarListHeader>
-        {team.channels.map(({ id, name }) => (
-          <Link to={`/channel/${team.id}/${id}`} key={id}>
+        {team.channels.map(({ id, name, conversation }) => (
+          <Link to={`/${conversation.id}`} key={id}>
             <SideBarListItem># {name}</SideBarListItem>
           </Link>
         ))}

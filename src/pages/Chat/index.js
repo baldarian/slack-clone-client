@@ -12,13 +12,7 @@ import InvitePeople from './components/InvitePeople';
 import { GET_TEAMS } from './../../graphql/team';
 import { GET_ME } from './../../graphql/user';
 
-const defaultTeam = {
-  channels: []
-};
-
-const defaultChannel = {};
-
-const ViewTeam = ({ match, history }) => {
+const Chat = ({ match, history }) => {
   const {
     loading,
     data: { teams = [] }
@@ -30,53 +24,51 @@ const ViewTeam = ({ match, history }) => {
   const [isAddChannelModalOpen, setIsAddChannelModalOpen] = useState(false);
   const [isInvitePeopleModalOpen, setIsInvitePeopleModalOpen] = useState(false);
 
-  const { teamId, channelId, type } = match.params;
-
-  const currentTeam = teams.find(team => team.id === teamId) || defaultTeam;
-
-  const currentChannel =
-    (currentTeam &&
-      currentTeam.channels.find(channel => channel.id === channelId)) ||
-    defaultChannel;
-
   useEffect(() => {
     if (loading) {
       return;
     }
 
-    if (!['channel', 'direct'].includes(type)) {
-      history.push('/channel');
+    if (teams.length === 0) {
+      history.push('/create-team');
       return;
     }
 
-    if (!teamId || (!loading && currentTeam === defaultTeam)) {
-      history.push(`/${type}/${teams[0].id}`);
+    const currentTeam = teams.find(team => {
+      return team.channels.some(
+        channel => channel.conversation.id === conversationId
+      );
+    });
+
+    if (!currentTeam) {
+      history.push(`/${teams[0].channels[0].conversation.id}`);
       return;
     }
+  });
 
-    if (!channelId || (!loading && currentChannel === defaultChannel)) {
-      history.push(`/${type}/${teamId}/${currentTeam.channels[0].id}`);
-      return;
-    }
-  }, [
-    channelId,
-    currentChannel,
-    currentTeam,
-    history,
-    loading,
-    teamId,
-    teams,
-    type
-  ]);
+  if (loading) {
+    return null;
+  }
 
-  const formattedTeams = teams.map(team => ({
-    letter: team.name.charAt(0).toUpperCase(),
-    ...team
-  }));
+  const { conversationId } = match.params;
+
+  const currentTeam = teams.find(team => {
+    return team.channels.some(
+      channel => channel.conversation.id === conversationId
+    );
+  });
+
+  if (!currentTeam) {
+    return null;
+  }
+
+  const currentChannel = currentTeam.channels.find(
+    channel => channel.conversation.id === conversationId
+  );
 
   return (
     <AppLayout>
-      <Teams teams={formattedTeams} />
+      <Teams teams={teams} />
       <Channels
         team={currentTeam}
         user={me}
@@ -86,7 +78,7 @@ const ViewTeam = ({ match, history }) => {
         isInvitePeopleButtonAvailable={currentTeam.isAdmin}
       />
       <Header channelName={currentChannel.name} />
-      {currentChannel.id && <Messages channelId={currentChannel.id} />}
+      <Messages conversationId={currentChannel.conversation.id} me={me} />
       <SendMessage channel={currentChannel} />
 
       <AddChannel
@@ -104,4 +96,4 @@ const ViewTeam = ({ match, history }) => {
   );
 };
 
-export default ViewTeam;
+export default Chat;

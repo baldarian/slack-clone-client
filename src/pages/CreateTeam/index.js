@@ -25,7 +25,7 @@ const CreateTeam = props => {
           const { data } = await createTeam({ variables: values });
 
           await new Promise(r => window.setTimeout(r, 1000));
-          props.history.push(`/${data.createTeam.id}`);
+          props.history.push(`/${data.createTeam.channels[0].conversation.id}`);
         })}
       >
         {({ handleSubmit, errors }) => (
@@ -44,6 +44,12 @@ const CREATE_TEAM = gql`
   mutation($name: String!) {
     createTeam(name: $name) {
       id
+      channels {
+        id
+        conversation {
+          id
+        }
+      }
     }
   }
 `;

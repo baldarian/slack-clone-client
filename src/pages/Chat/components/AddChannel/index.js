@@ -66,6 +66,9 @@ const CREATE_CHANNEL = gql`
     createChannel(teamId: $teamId, name: $name) {
       id
       name
+      conversation {
+        id
+      }
     }
   }
 `;

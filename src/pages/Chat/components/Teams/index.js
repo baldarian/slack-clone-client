@@ -39,8 +39,8 @@ const Teams = ({ teams }) => (
   <TeamWrapper>
     <TeamList>
       {teams.map(team => (
-        <Link to={`/channel/${team.id}/${team.channels[0].id}`} key={team.id}>
-          <TeamListItem>{team.letter}</TeamListItem>
+        <Link to={`/${team.channels[0].conversation.id}`} key={team.id}>
+          <TeamListItem>{team.name.slice(0, 1)}</TeamListItem>
         </Link>
       ))}
     </TeamList>

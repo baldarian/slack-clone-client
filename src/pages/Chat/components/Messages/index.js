@@ -23,39 +23,39 @@ const NoMessageContainer = styled.div`
   height: 100%;
 `;
 
-const Messages = ({ channelId }) => {
+const Messages = ({ conversationId }) => {
   const {
     data: { messages = [] }
   } = useQuery(GET_MESSAGES, {
-    variables: { channelId },
+    variables: { conversationId },
     fetchPolicy: 'cache-and-network'
   });
 
   useSubscription(MESSAGE_ADDED, {
     variables: {
-      channelId
+      conversationId
     },
     onSubscriptionData: ({ client, subscriptionData }) => {
       const { messages } = client.readQuery({
         query: GET_MESSAGES,
-        variables: { channelId }
+        variables: { conversationId }
       });
 
       client.writeQuery({
         query: GET_MESSAGES,
         data: { messages: [...messages, subscriptionData.data.messageAdded] },
-        variables: { channelId }
+        variables: { conversationId }
       });
     }
   });
 
   return (
     <MessageContainer>
-      <Comment.Group>
+      <Comment.Group style={{ maxWidth: 'initial' }}>
         {messages.map(message => (
           <Comment key={message.id}>
             <Comment.Content>
-              <Comment.Author as="a">{message.user.username}</Comment.Author>
+              <Comment.Author as="a">{message.sender.username}</Comment.Author>
               <Comment.Metadata>
                 <div>
                   {moment(message.createdAt).format('dddd, MMMM D, YYYY h:mma')}

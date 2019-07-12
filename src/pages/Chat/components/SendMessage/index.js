@@ -42,7 +42,7 @@ const Input = styled.div`
   padding-right: 10px;
 `;
 
-const SendMessage = ({ channel }) => {
+const SendMessage = ({ conversationId, placeholder }) => {
   const input = useRef();
   const createMessage = useMutation(CREATE_MESSAGE);
 
@@ -72,7 +72,7 @@ const SendMessage = ({ channel }) => {
       <Input
         contentEditable
         ref={input}
-        placeholder={`Message #${channel.name}`}
+        placeholder={placeholder}
         onKeyDown={async e => {
           const message = input.current.textContent;
 
@@ -86,7 +86,7 @@ const SendMessage = ({ channel }) => {
             await createMessage({
               variables: {
                 text: message,
-                conversationId: channel.conversation.id
+                conversationId
               }
             });
 

@@ -11,6 +11,15 @@ export const GET_TEAMS = gql`
         name
         conversation {
           id
+          channelId
+        }
+      }
+      members {
+        id
+        username
+        conversation {
+          id
+          channelId
         }
       }
     }

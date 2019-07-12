@@ -81,10 +81,12 @@ const Channels = ({
     <div>
       <SideBarList>
         <SideBarListHeader>Direct Messages</SideBarListHeader>
-        {users.map(({ id, name }) => (
-          <SideBarListItem key={id}>
-            <Bubble /> {name}
-          </SideBarListItem>
+        {team.members.map(({ id, username, conversation }) => (
+          <Link to={`/${conversation.id}`} key={id}>
+            <SideBarListItem key={id}>
+              <Bubble /> {username}
+            </SideBarListItem>
+          </Link>
         ))}
       </SideBarList>
     </div>

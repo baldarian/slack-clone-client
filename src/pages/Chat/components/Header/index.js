@@ -7,13 +7,13 @@ const HeaderWrapper = styled.div`
   padding-top: 10px;
 `;
 
-const ChannelName = styled.h3`
+const Text = styled.h3`
   text-align: center;
 `;
 
-const Header = ({ channelName }) => (
+const Header = ({ text }) => (
   <HeaderWrapper>
-    <ChannelName>{channelName}</ChannelName>
+    <Text>{text}</Text>
   </HeaderWrapper>
 );
 

@@ -35,8 +35,11 @@ const Chat = ({ match, history }) => {
     }
 
     const currentTeam = teams.find(team => {
-      return team.channels.some(
-        channel => channel.conversation.id === conversationId
+      return (
+        team.channels.some(
+          channel => channel.conversation.id === conversationId
+        ) ||
+        team.members.some(member => member.conversation.id === conversationId)
       );
     });
 
@@ -53,8 +56,11 @@ const Chat = ({ match, history }) => {
   const { conversationId } = match.params;
 
   const currentTeam = teams.find(team => {
-    return team.channels.some(
-      channel => channel.conversation.id === conversationId
+    return (
+      team.channels.some(
+        channel => channel.conversation.id === conversationId
+      ) ||
+      team.members.some(member => member.conversation.id === conversationId)
     );
   });
 
@@ -66,20 +72,30 @@ const Chat = ({ match, history }) => {
     channel => channel.conversation.id === conversationId
   );
 
+  const currentMember = currentTeam.members.find(
+    member => member.conversation.id === conversationId
+  );
+
   return (
     <AppLayout>
       <Teams teams={teams} />
       <Channels
         team={currentTeam}
         user={me}
-        users={[{ id: 1, name: 'Slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={() => setIsAddChannelModalOpen(true)}
         onInvitePeopleClick={() => setIsInvitePeopleModalOpen(true)}
         isInvitePeopleButtonAvailable={currentTeam.isAdmin}
       />
-      <Header channelName={currentChannel.name} />
-      <Messages conversationId={currentChannel.conversation.id} me={me} />
-      <SendMessage channel={currentChannel} />
+      <Header
+        text={currentChannel ? currentChannel.name : currentMember.username}
+      />
+      <Messages conversationId={conversationId} me={me} />
+      <SendMessage
+        conversationId={conversationId}
+        placeholder={`Message #${
+          currentChannel ? currentChannel.name : currentMember.username
+        }`}
+      />
 
       <AddChannel
         teamId={currentTeam.id}

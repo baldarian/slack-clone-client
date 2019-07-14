@@ -28,11 +28,11 @@ const authLink = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8030/'
+  uri: 'http://localhost:8040/'
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8030/subscriptions`,
+  uri: `ws://localhost:8040/subscriptions`,
   options: {
     reconnect: true,
     connectionParams: {

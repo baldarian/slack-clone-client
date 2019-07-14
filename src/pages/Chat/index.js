@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-apollo-hooks';
+import styled from 'styled-components';
 
-import AppLayout from './components/AppLayout';
-import Channels from './components/Channels';
+import Conversations from './components/Conversations';
 import Teams from './components/Teams';
 import Header from './components/Header';
 import Messages from './components/Messages';
@@ -11,6 +11,24 @@ import AddChannel from './components/AddChannel';
 import InvitePeople from './components/InvitePeople';
 import { GET_TEAMS } from './../../graphql/team';
 import { GET_ME } from './../../graphql/user';
+
+function getCurrentTeam(teams, conversationId) {
+  return teams.find(team => {
+    return (
+      team.channels.some(
+        channel => channel.conversation.id === conversationId
+      ) ||
+      team.members.some(member => member.conversation.id === conversationId)
+    );
+  });
+}
+
+const Container = styled.div`
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 100px 250px 1fr;
+  grid-template-rows: auto 1fr auto;
+`;
 
 const Chat = ({ match, history }) => {
   const {
@@ -34,14 +52,7 @@ const Chat = ({ match, history }) => {
       return;
     }
 
-    const currentTeam = teams.find(team => {
-      return (
-        team.channels.some(
-          channel => channel.conversation.id === conversationId
-        ) ||
-        team.members.some(member => member.conversation.id === conversationId)
-      );
-    });
+    const currentTeam = getCurrentTeam(teams, conversationId);
 
     if (!currentTeam) {
       history.push(`/${teams[0].channels[0].conversation.id}`);
@@ -55,14 +66,7 @@ const Chat = ({ match, history }) => {
 
   const { conversationId } = match.params;
 
-  const currentTeam = teams.find(team => {
-    return (
-      team.channels.some(
-        channel => channel.conversation.id === conversationId
-      ) ||
-      team.members.some(member => member.conversation.id === conversationId)
-    );
-  });
+  const currentTeam = getCurrentTeam(teams, conversationId);
 
   if (!currentTeam) {
     return null;
@@ -76,25 +80,27 @@ const Chat = ({ match, history }) => {
     member => member.conversation.id === conversationId
   );
 
+  const title = currentChannel ? currentChannel.name : currentMember.username;
+
   return (
-    <AppLayout>
+    <Container>
       <Teams teams={teams} />
-      <Channels
+
+      <Conversations
         team={currentTeam}
         user={me}
         onAddChannelClick={() => setIsAddChannelModalOpen(true)}
         onInvitePeopleClick={() => setIsInvitePeopleModalOpen(true)}
         isInvitePeopleButtonAvailable={currentTeam.isAdmin}
       />
-      <Header
-        text={currentChannel ? currentChannel.name : currentMember.username}
-      />
+
+      <Header text={title} />
+
       <Messages conversationId={conversationId} me={me} />
+
       <SendMessage
         conversationId={conversationId}
-        placeholder={`Message #${
-          currentChannel ? currentChannel.name : currentMember.username
-        }`}
+        placeholder={`Message #${title}`}
       />
 
       <AddChannel
@@ -108,7 +114,7 @@ const Chat = ({ match, history }) => {
         open={isInvitePeopleModalOpen}
         onClose={() => setIsInvitePeopleModalOpen(false)}
       />
-    </AppLayout>
+    </Container>
   );
 };
 

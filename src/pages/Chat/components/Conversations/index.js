@@ -53,7 +53,7 @@ const InvitePeople = styled.div`
 
 const Bubble = ({ on = true }) => (on ? <Green>●</Green> : '○');
 
-const Channels = ({
+const Conversations = ({
   team,
   user,
   users,
@@ -96,4 +96,4 @@ const Channels = ({
   </ChannelWrapper>
 );
 
-export default Channels;
+export default Conversations;

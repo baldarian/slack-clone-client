@@ -6,14 +6,29 @@ import { useMutation } from 'react-apollo-hooks';
 
 import { email, handleSubmit } from 'common/validation';
 import Input from 'components/Input';
-import { ADD_TEAM_MEMBER } from 'graphql/team';
+import { ADD_TEAM_MEMBER, GET_TEAMS } from 'graphql/team';
 
 const schema = object().shape({
   email
 });
 
 const InvitePeople = ({ open, onClose, teamId }) => {
-  const addTeamMember = useMutation(ADD_TEAM_MEMBER);
+  const addTeamMember = useMutation(ADD_TEAM_MEMBER, {
+    update: (cache, { data }) => {
+      const { teams } = cache.readQuery({ query: GET_TEAMS });
+
+      const newTeams = teams.map(team =>
+        team.id === teamId
+          ? { ...team, members: [...team.members, data.addTeamMember] }
+          : team
+      );
+
+      cache.writeQuery({
+        query: GET_TEAMS,
+        data: { teams: newTeams }
+      });
+    }
+  });
 
   return (
     <Modal closeIcon size="mini" open={open} onClose={onClose}>

@@ -43,6 +43,9 @@ const Teams = ({ teams }) => (
           <TeamListItem>{team.name.slice(0, 1)}</TeamListItem>
         </Link>
       ))}
+      <Link to="/create-team">
+        <TeamListItem>+</TeamListItem>
+      </Link>
     </TeamList>
   </TeamWrapper>
 );

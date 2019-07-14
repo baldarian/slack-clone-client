@@ -28,6 +28,13 @@ export const GET_TEAMS = gql`
 
 export const ADD_TEAM_MEMBER = gql`
   mutation($teamId: ID!, $email: String!) {
-    addTeamMember(teamId: $teamId, email: $email)
+    addTeamMember(teamId: $teamId, email: $email) {
+      id
+      username
+      conversation {
+        id
+        channelId
+      }
+    }
   }
 `;

@@ -68,6 +68,7 @@ const CREATE_CHANNEL = gql`
       name
       conversation {
         id
+        channelId
       }
     }
   }

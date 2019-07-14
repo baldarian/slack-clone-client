@@ -1,67 +1,74 @@
 import React from 'react';
-import { Container, Header, Button, Form } from 'semantic-ui-react';
+import { Header, Form } from 'semantic-ui-react';
 import { Formik } from 'formik';
-import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { object } from 'yup';
+
 import Input from '../../components/Input';
-import { email, password } from '../../common/validation';
-import { handleSubmit } from './../../common/validation';
+import { email, password, handleSubmit } from '../../common/validation';
+import logo from '../../assets/logo.png';
+import { LOGIN } from '../../graphql/user';
+import {
+  Container,
+  Wrapper,
+  Logo,
+  BlueButton,
+  BlueLink
+} from '../../styled-components/auth.js';
 
 const schema = object().shape({
   email,
   password
 });
 
-const Login = props => {
+const Login = ({ history }) => {
   const login = useMutation(LOGIN);
 
   return (
-    <Container text>
-      <Header as="h2">Login</Header>
+    <Container>
+      <div>
+        <Wrapper>
+          <Header as="h2">
+            <Logo src={logo} />
+          </Header>
 
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={schema}
-        onSubmit={handleSubmit(async values => {
-          const response = await login({ variables: values });
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={schema}
+            onSubmit={handleSubmit(async values => {
+              const response = await login({ variables: values });
 
-          const { accessToken, refreshToken } = response.data.login;
+              const { accessToken, refreshToken } = response.data.login;
 
-          localStorage.setItem('access_token', accessToken);
-          localStorage.setItem('refresh_token', refreshToken);
+              localStorage.setItem('access_token', accessToken);
+              localStorage.setItem('refresh_token', refreshToken);
 
-          props.history.push('/');
-        })}
-      >
-        {({ handleSubmit, errors }) => {
-          return (
-            <Form onSubmit={handleSubmit}>
-              <Input fluid name="email" placeholder="Email" />
+              history.push('/');
+            })}
+          >
+            {({ handleSubmit, errors }) => (
+              <Form onSubmit={handleSubmit}>
+                <Input fluid name="email" placeholder="Email" />
+                <Input
+                  fluid
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
+                <BlueButton type="submit" fluid>
+                  Log in
+                </BlueButton>
+              </Form>
+            )}
+          </Formik>
+        </Wrapper>
 
-              <Input
-                fluid
-                name="password"
-                type="password"
-                placeholder="Password"
-              />
-
-              <Button type="submit">Submit</Button>
-            </Form>
-          );
-        }}
-      </Formik>
+        <Wrapper mt="3">
+          Don't have an account? <BlueLink to="/register">Sign up</BlueLink>
+        </Wrapper>
+      </div>
     </Container>
   );
 };
-
-const LOGIN = gql`
-  mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      accessToken
-      refreshToken
-    }
-  }
-`;
 
 export default Login;

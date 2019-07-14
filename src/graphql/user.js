@@ -9,3 +9,18 @@ export const GET_ME = gql`
     }
   }
 `;
+
+export const LOGIN = gql`
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+
+export const REGISTER = gql`
+  mutation($username: String!, $email: String!, $password: String!) {
+    register(username: $username, email: $email, password: $password)
+  }
+`;

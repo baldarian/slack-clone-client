@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ApolloProvider } from 'react-apollo-hooks';
 import { Router, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { ThemeProvider } from 'styled-components';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +12,7 @@ import history from './history';
 import client from './client';
 import { PrivateRoute, PublicRoute } from './components/Route';
 
+import theme from './theme';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import CreateTeam from './pages/CreateTeam';
@@ -33,15 +35,19 @@ class App extends Component {
 
     return (
       <ApolloProvider client={client}>
-        <Router history={history}>
-          <Switch>
-            <PublicRoute path="/register" component={Register} />
-            <PublicRoute path="/login" component={Login} />
-            <PrivateRoute path="/create-team" component={CreateTeam} />
-            <PrivateRoute path="/:conversationId?" component={Chat} />
-          </Switch>
-        </Router>
-        <ToastContainer hideProgressBar autoClose={2000} />
+        <ThemeProvider theme={theme}>
+          <>
+            <Router history={history}>
+              <Switch>
+                <PublicRoute path="/register" component={Register} />
+                <PublicRoute path="/login" component={Login} />
+                <PrivateRoute path="/create-team" component={CreateTeam} />
+                <PrivateRoute path="/:conversationId?" component={Chat} />
+              </Switch>
+            </Router>
+            <ToastContainer hideProgressBar autoClose={2000} />
+          </>
+        </ThemeProvider>
       </ApolloProvider>
     );
   }

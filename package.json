@@ -25,6 +25,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.2",
     "styled-components": "^4.3.2",
+    "styled-system": "^5.0.12",
     "subscriptions-transport-ws": "^0.9.16",
     "yup": "^0.27.0"
   },

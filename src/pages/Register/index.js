@@ -1,9 +1,9 @@
 import React from 'react';
-import { Container, Header, Button, Form } from 'semantic-ui-react';
+import { Header, Form } from 'semantic-ui-react';
 import { Formik } from 'formik';
-import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo-hooks';
 import { object } from 'yup';
+import { toast } from 'react-toastify';
 import Input from '../../components/Input';
 import {
   username,
@@ -11,6 +11,15 @@ import {
   password,
   handleSubmit
 } from '../../common/validation';
+import { REGISTER } from '../../graphql/user';
+import {
+  Container,
+  Wrapper,
+  Logo,
+  BlueButton,
+  BlueLink
+} from '../../styled-components/auth.js';
+import logo from '../../assets/logo.png';
 
 const schema = object().shape({
   username,
@@ -18,47 +27,55 @@ const schema = object().shape({
   password
 });
 
-const Register = props => {
+const Register = ({ history }) => {
   const register = useMutation(REGISTER);
 
   return (
-    <Container text>
-      <Header as="h2">Register</Header>
+    <Container>
+      <div>
+        <Wrapper>
+          <Header as="h2">
+            <Logo src={logo} />
+          </Header>
 
-      <Formik
-        initialValues={{ username: '', email: '', password: '' }}
-        validationSchema={schema}
-        onSubmit={handleSubmit(async values => {
-          await register({ variables: values });
+          <Formik
+            initialValues={{ username: '', email: '', password: '' }}
+            validationSchema={schema}
+            onSubmit={handleSubmit(async values => {
+              await register({ variables: values });
 
-          props.history.push('/');
-        })}
-      >
-        {({ handleSubmit, errors }) => (
-          <Form onSubmit={handleSubmit}>
-            <Input fluid name="username" placeholder="Username" />
+              toast.success("You've successfully registered");
 
-            <Input fluid name="email" placeholder="Email" />
+              history.push('/');
+            })}
+          >
+            {({ handleSubmit, errors }) => (
+              <Form onSubmit={handleSubmit}>
+                <Input fluid name="username" placeholder="Username" />
 
-            <Input
-              fluid
-              name="password"
-              type="password"
-              placeholder="Password"
-            />
+                <Input fluid name="email" placeholder="Email" />
 
-            <Button type="submit">Submit</Button>
-          </Form>
-        )}
-      </Formik>
+                <Input
+                  fluid
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
+
+                <BlueButton fluid type="submit">
+                  Sign up
+                </BlueButton>
+              </Form>
+            )}
+          </Formik>
+        </Wrapper>
+
+        <Wrapper mt="3">
+          Have an account? <BlueLink to="/login">Log in</BlueLink>
+        </Wrapper>
+      </div>
     </Container>
   );
 };
-
-const REGISTER = gql`
-  mutation($username: String!, $email: String!, $password: String!) {
-    register(username: $username, email: $email, password: $password)
-  }
-`;
 
 export default Register;

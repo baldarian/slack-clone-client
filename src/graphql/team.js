@@ -1,29 +1,14 @@
 import gql from 'graphql-tag';
+import { TEAM_FRAGMENT } from './fragments';
 
 export const GET_TEAMS = gql`
   {
     teams {
-      id
-      name
-      isAdmin
-      channels {
-        id
-        name
-        conversation {
-          id
-          channelId
-        }
-      }
-      members {
-        id
-        username
-        conversation {
-          id
-          channelId
-        }
-      }
+      ...TeamFragment
     }
   }
+
+  ${TEAM_FRAGMENT}
 `;
 
 export const ADD_TEAM_MEMBER = gql`
@@ -37,4 +22,14 @@ export const ADD_TEAM_MEMBER = gql`
       }
     }
   }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation($name: String!) {
+    createTeam(name: $name) {
+      ...TeamFragment
+    }
+  }
+
+  ${TEAM_FRAGMENT}
 `;

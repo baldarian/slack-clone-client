@@ -15,7 +15,6 @@ import { PrivateRoute, PublicRoute } from './components/Route';
 import theme from './theme';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import CreateTeam from './pages/CreateTeam';
 import Chat from './pages/Chat';
 
 class App extends Component {
@@ -41,7 +40,6 @@ class App extends Component {
               <Switch>
                 <PublicRoute path="/register" component={Register} />
                 <PublicRoute path="/login" component={Login} />
-                <PrivateRoute path="/create-team" component={CreateTeam} />
                 <PrivateRoute path="/:conversationId?" component={Chat} />
               </Switch>
             </Router>

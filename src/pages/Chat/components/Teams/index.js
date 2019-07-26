@@ -35,7 +35,7 @@ const TeamListItem = styled.li`
   }
 `;
 
-const Teams = ({ teams }) => (
+const Teams = ({ teams, onPlusButtonClick }) => (
   <TeamWrapper>
     <TeamList>
       {teams.map(team => (
@@ -43,9 +43,7 @@ const Teams = ({ teams }) => (
           <TeamListItem>{team.name.slice(0, 1)}</TeamListItem>
         </Link>
       ))}
-      <Link to="/create-team">
-        <TeamListItem>+</TeamListItem>
-      </Link>
+      <TeamListItem onClick={onPlusButtonClick}>+</TeamListItem>
     </TeamList>
   </TeamWrapper>
 );

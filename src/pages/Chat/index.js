@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-apollo-hooks';
 import styled from 'styled-components';
+import { Loader } from 'semantic-ui-react';
 
 import Conversations from './components/Conversations';
 import Teams from './components/Teams';
@@ -8,6 +9,7 @@ import Header from './components/Header';
 import Messages from './components/Messages';
 import SendMessage from './components/SendMessage';
 import AddChannel from './components/AddChannel';
+import CreateTeam from './components/CreateTeam';
 import InvitePeople from './components/InvitePeople';
 import { GET_TEAMS } from './../../graphql/team';
 import { GET_ME } from './../../graphql/user';
@@ -30,6 +32,14 @@ const Container = styled.div`
   grid-template-rows: auto 1fr auto;
 `;
 
+const LoaderWrapper = styled.div`
+  width: 100%,
+  height: 100%,
+  display: flex,
+  justifyContent: center,
+  alignItems: center
+`;
+
 const Chat = ({ match, history }) => {
   const {
     loading,
@@ -40,6 +50,7 @@ const Chat = ({ match, history }) => {
   } = useQuery(GET_ME);
 
   const [isAddChannelModalOpen, setIsAddChannelModalOpen] = useState(false);
+  const [isCreateTeamModalOpen, setIsCreateTeamModalOpen] = useState(false);
   const [isInvitePeopleModalOpen, setIsInvitePeopleModalOpen] = useState(false);
 
   useEffect(() => {
@@ -60,16 +71,16 @@ const Chat = ({ match, history }) => {
     }
   });
 
-  if (loading) {
-    return null;
-  }
-
   const { conversationId } = match.params;
 
   const currentTeam = getCurrentTeam(teams, conversationId);
 
-  if (!currentTeam) {
-    return null;
+  if (loading || !currentTeam) {
+    return (
+      <LoaderWrapper>
+        <Loader active size="big" />
+      </LoaderWrapper>
+    );
   }
 
   const currentChannel = currentTeam.channels.find(
@@ -84,7 +95,10 @@ const Chat = ({ match, history }) => {
 
   return (
     <Container>
-      <Teams teams={teams} />
+      <Teams
+        teams={teams}
+        onPlusButtonClick={() => setIsCreateTeamModalOpen(true)}
+      />
 
       <Conversations
         team={currentTeam}
@@ -107,6 +121,11 @@ const Chat = ({ match, history }) => {
         teamId={currentTeam.id}
         open={isAddChannelModalOpen}
         onClose={() => setIsAddChannelModalOpen(false)}
+      />
+
+      <CreateTeam
+        open={isCreateTeamModalOpen}
+        onClose={() => setIsCreateTeamModalOpen(false)}
       />
 
       <InvitePeople

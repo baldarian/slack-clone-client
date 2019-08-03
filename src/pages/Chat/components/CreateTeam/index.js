@@ -40,7 +40,9 @@ const CreateTeam = ({ open, onClose }) => {
             <Form onSubmit={handleSubmit}>
               <Input fluid name="name" placeholder="Name" />
 
-              <Button type="submit">Submit</Button>
+              <Button type="submit" fluid>
+                Create
+              </Button>
             </Form>
           )}
         </Formik>

@@ -5,7 +5,7 @@ import { useQuery, useSubscription } from 'react-apollo-hooks';
 import moment from 'moment';
 import { GET_MESSAGES, MESSAGE_ADDED } from 'graphql/message';
 import { List } from 'react-content-loader';
-import formatMessages from 'common/formatMessages';
+import { convertMessageFromKeysToEmojies } from 'common/formatMessages';
 
 const MessageContainer = styled.div`
   grid-column: 3;
@@ -72,7 +72,7 @@ const Messages = ({ conversationId }) => {
                 </div>
               </Comment.Metadata>
               <Comment.Text style={{ display: 'flex' }}>
-                {formatMessages(message.text)}
+                {convertMessageFromKeysToEmojies(message.text)}
               </Comment.Text>
             </Comment.Content>
           </Comment>

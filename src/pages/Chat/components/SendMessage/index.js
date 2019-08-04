@@ -8,7 +8,10 @@ import 'emoji-mart/css/emoji-mart.css';
 
 import sheet from 'assets/sheet.jpg';
 import { CREATE_MESSAGE } from 'graphql/message';
-import formatMessages from 'common/formatMessages';
+import {
+  convertMessageFromEmojiesToKeys,
+  convertMessageFromKeysToEmojies
+} from 'common/formatMessages';
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
@@ -74,7 +77,9 @@ const SendMessage = ({ conversationId, placeholder }) => {
         ref={input}
         placeholder={placeholder}
         onKeyDown={async e => {
-          const message = input.current.textContent;
+          const message = convertMessageFromEmojiesToKeys(
+            input.current.innerHTML
+          );
 
           if (e.key === 'Enter') {
             e.preventDefault();
@@ -90,7 +95,7 @@ const SendMessage = ({ conversationId, placeholder }) => {
               }
             });
 
-            input.current.textContent = '';
+            input.current.innerHTML = '';
           }
         }}
       />
@@ -108,10 +113,14 @@ const SendMessage = ({ conversationId, placeholder }) => {
           emojiTooltip
           backgroundImageFn={() => sheet}
           onSelect={emoji => {
-            const newMessage = input.current.textContent + emoji.colons;
+            const messageWithKeys = convertMessageFromEmojiesToKeys(
+              input.current.innerHTML
+            );
+
+            const newMessage = messageWithKeys + emoji.colons;
 
             input.current.innerHTML = renderToString(
-              formatMessages(newMessage)
+              convertMessageFromKeysToEmojies(newMessage)
             );
           }}
         />

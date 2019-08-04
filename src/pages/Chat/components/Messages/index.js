@@ -4,6 +4,7 @@ import { Comment, Message } from 'semantic-ui-react';
 import { useQuery, useSubscription } from 'react-apollo-hooks';
 import moment from 'moment';
 import { GET_MESSAGES, MESSAGE_ADDED } from 'graphql/message';
+import { List } from 'react-content-loader';
 import formatMessages from 'common/formatMessages';
 
 const MessageContainer = styled.div`
@@ -25,6 +26,7 @@ const NoMessageContainer = styled.div`
 
 const Messages = ({ conversationId }) => {
   const {
+    loading,
     data: { messages = [] }
   } = useQuery(GET_MESSAGES, {
     variables: { conversationId },
@@ -48,6 +50,14 @@ const Messages = ({ conversationId }) => {
       });
     }
   });
+
+  if (loading && messages.length === 0) {
+    return (
+      <MessageContainer>
+        <List style={{ height: '35%' }} />
+      </MessageContainer>
+    );
+  }
 
   return (
     <MessageContainer>

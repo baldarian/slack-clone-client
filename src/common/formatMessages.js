@@ -8,7 +8,7 @@ export function convertMessageFromEmojiesToKeys(message) {
     .filter(x => !!x)
     .map(m => {
       if (/(<img.*?>)/.test(m)) {
-        const result = m.match(/(?<=data-emoji="):\w*?:/);
+        const result = m.match(/(?<=data-emoji="):.*?:/);
 
         if (result) {
           return result[0];

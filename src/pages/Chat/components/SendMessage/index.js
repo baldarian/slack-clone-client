@@ -38,11 +38,12 @@ const PickerWrapper = styled.div`
 
 const Input = styled.div`
   border: 1px solid #b3b3b3;
-  height: 35px;
+  max-height: 100px;
+  overflow: auto;
   line-height: 35px;
   cursor: text;
   padding-left: 10px;
-  padding-right: 10px;
+  padding-right: 30px;
 `;
 
 const SendMessage = ({ conversationId, placeholder }) => {

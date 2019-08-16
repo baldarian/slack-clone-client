@@ -3,8 +3,8 @@
 }
 
 #root .emoji-mart-emoji {
-  margin-left: 2px;
-  margin-right: 2px;
+  margin-bottom: -3px;
+  position: initial;
 }
 
 #root .emoji-mart .emoji-mart-emoji > span {

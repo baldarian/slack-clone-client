@@ -12,6 +12,12 @@ import {
   convertMessageFromEmojiesToKeys,
   convertMessageFromKeysToEmojies
 } from 'common/formatMessages';
+import {
+  insertNodeAtCursor,
+  saveSelection,
+  restoreSelection,
+  convertStringToDOMNode
+} from 'common/selection';
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
@@ -46,12 +52,18 @@ const Input = styled.div`
   padding-right: 30px;
 `;
 
+let range;
+
 const SendMessage = ({ conversationId, placeholder }) => {
   const input = useRef();
   const createMessage = useMutation(CREATE_MESSAGE);
 
   const picker = useRef();
   const [isPickerShown, setIsPickerShown] = useState();
+
+  useEffect(() => {
+    input.current.focus();
+  }, [conversationId]);
 
   useEffect(() => {
     function hidePicker(e) {
@@ -77,13 +89,14 @@ const SendMessage = ({ conversationId, placeholder }) => {
         contentEditable
         ref={input}
         placeholder={placeholder}
+        onBlur={() => (range = saveSelection())}
         onKeyDown={async e => {
-          const message = convertMessageFromEmojiesToKeys(
-            input.current.innerHTML
-          );
-
           if (e.key === 'Enter') {
             e.preventDefault();
+
+            const message = convertMessageFromEmojiesToKeys(
+              input.current.innerHTML
+            );
 
             if (message.trim() === '') {
               return;
@@ -114,15 +127,14 @@ const SendMessage = ({ conversationId, placeholder }) => {
           emojiTooltip
           backgroundImageFn={() => sheet}
           onSelect={emoji => {
-            const messageWithKeys = convertMessageFromEmojiesToKeys(
-              input.current.innerHTML
-            );
+            setIsPickerShown(false);
+            restoreSelection(range);
 
-            const newMessage = messageWithKeys + emoji.colons;
+            const reactElement = convertMessageFromKeysToEmojies(emoji.colons);
+            const string = renderToString(reactElement);
+            const node = convertStringToDOMNode(string);
 
-            input.current.innerHTML = renderToString(
-              convertMessageFromKeysToEmojies(newMessage)
-            );
+            insertNodeAtCursor(node);
           }}
         />
       </PickerWrapper>
